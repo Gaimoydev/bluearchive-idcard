@@ -1,0 +1,16 @@
+{
+  "name": "idcard-generator",
+  "version": "1.0.0",
+  "main": "main.js",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.1.0",
+    "multer": "^2.0.2",
+    "sharp": "^0.34.3",
+    "text-to-svg": "^3.1.5"
+  },
+  "scripts": {
+    "start": "node main.js",
+    "dev": "nodemon main.js"
+  }
+}
