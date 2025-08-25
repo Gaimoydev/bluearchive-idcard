@@ -121,7 +121,6 @@
           </form>
         </div>
       </div>
-
       <div class="col-lg-6">
         <div class="card text-center">
           <h2 class="mb-4">生成结果</h2>
@@ -135,63 +134,7 @@
   </div>
 
   <script>
-    function formatDate(dateStr) {
-      const d = new Date(dateStr);
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      return `${y}.${m}.${day}`;
-    }
-
-    document.getElementById('show-example').addEventListener('click', () => {
-      const preview = document.getElementById('preview');
-      const dl = document.getElementById('download-btn');
-
-      preview.src = "exp.png";
-      preview.style.display = "block";
-
-      dl.href = "exp.png";
-      dl.style.display = "block";
-    });
-
-
-    document.getElementById('idcard-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-
-      const birth = formData.get('birth');
-      if (birth) {
-        const d = new Date(birth);
-        formData.set('year', d.getFullYear().toString());
-        formData.set('mon', String(d.getMonth() + 1).padStart(2, '0'));
-        formData.set('day', String(d.getDate()).padStart(2, '0'));
-      }
-
-      const validStart = formData.get('validStart');
-      const validEnd = formData.get('validEnd');
-      if (validStart && validEnd) {
-        formData.set('validTerm', `${formatDate(validStart)}-${formatDate(validEnd)}`);
-      }
-
-      const res = await fetch('/idcard', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (res.ok) {
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-
-        document.getElementById('preview').src = url;
-        document.getElementById('preview').style.display = 'block';
-
-        const dl = document.getElementById('download-btn');
-        dl.href = url;
-        dl.style.display = 'block';
-      } else {
-        alert('生成失败！');
-      }
-    });
+    function formatDate(dateStr){const d=new Date(dateStr);const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return`${y}.${m}.${day}`}document.getElementById('show-example').addEventListener('click',()=>{const preview=document.getElementById('preview');const dl=document.getElementById('download-btn');preview.src="exp.png";preview.style.display="block";dl.href="exp.png";dl.style.display="block"});document.getElementById('idcard-form').addEventListener('submit',async(e)=>{e.preventDefault();const formData=new FormData(e.target);const birth=formData.get('birth');if(birth){const d=new Date(birth);formData.set('year',d.getFullYear().toString());formData.set('mon',String(d.getMonth()+1).padStart(2,'0'));formData.set('day',String(d.getDate()).padStart(2,'0'))}const validStart=formData.get('validStart');const validEnd=formData.get('validEnd');if(validStart&&validEnd){formData.set('validTerm',`${formatDate(validStart)}-${formatDate(validEnd)}`)}const overlay=document.getElementById('loading-overlay');overlay.style.display='flex';try{const res=await fetch('/idcard',{method:'POST',body:formData});if(res.ok){const blob=await res.blob();const url=URL.createObjectURL(blob);document.getElementById('preview').src=url;document.getElementById('preview').style.display='block';const dl=document.getElementById('download-btn');dl.href=url;dl.style.display='block'}else{alert('生成失败！')}}catch(err){alert('网络错误，请重试')}finally{overlay.style.display='none'}});
   </script>
 <div class="text-center mt-4">
   <small style="color:#888; font-size:14px;">
@@ -200,6 +143,22 @@
       开源地址：github
     </a>
   </small>
+</div>
+<div id="loading-overlay" style="
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+">
+  <div class="spinner-border text-light" role="status" style="width: 4rem; height: 4rem;">
+    <span class="visually-hidden">加载中...</span>
+  </div>
+  <p style="margin-top:1rem; color:#fff;">正在生成...</p>
 </div>
 </body>
 </html>
